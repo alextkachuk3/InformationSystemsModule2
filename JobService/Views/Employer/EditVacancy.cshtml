@@ -1,0 +1,122 @@
+﻿@{
+    JobVacancy vacancy = Model;
+}
+
+<form method="post">
+    <input name="vacancyId" type="hidden" value="@vacancy.Id" />
+    <div class="mb-3">
+        <label for="jobVacancyTitleInput" class="form-label">Title</label>
+        <input name="title" class="form-control" id="jobVacancyTitleInput" value="@vacancy.Title">
+    </div>
+    <div class="mb-3">
+        <label for="jobVacancyRegionInput" class="form-label">Region</label>
+        <select id="jobVacancyRegionInput" class="form-select form-select-sm" aria-label=".form-select-sm example">
+            <option selected>Select region</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="jobVacancySettlementInput" class="form-label">Settlement</label>
+        <select name="settlementId" id="jobVacancySettlementInput" class="form-select form-select-sm" aria-label=".form-select-sm example">
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="jobVacancySalaryInput" class="form-label">Salary</label>
+        <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input name="salary" type="number" class="form-control" id="jobVacancySalaryInput" value="@vacancy.Salary">
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="jobVacancyDescriptionInput" class="form-label">Description</label>
+        <textarea name="description" class="form-control" id="jobVacancyDescriptionInput" rows="15">@vacancy.Description</textarea>
+    </div>
+
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary btn-block">Edit</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetRegions", "Settlement")",
+            dataType: "json",
+            success: function (result) {
+                $.each(result.value, function (i, item) {
+                    @if (vacancy.Settlement != null) {
+                        @:if (@vacancy.Settlement!.Region!.Id == item.id) {
+                            @:$("#jobVacancyRegionInput").append($("<option>", {
+                            @:    value: item.id,
+                            @:    text: item.name
+                            @:}).attr("selected", "selected"));
+                        @:}
+                        @:else {
+                            @:$("#jobVacancyRegionInput").append($("<option>", {
+                            @:    value: item.id,
+                            @:    text: item.name
+                            @:}));
+                        @:}
+                    }
+                    else {
+                        @:$("#jobVacancyRegionInput").append($("<option>", {
+                        @:    value: item.id,
+                        @:    text: item.name
+                        @:}));
+                    }
+                });
+                console.log(result);
+            }
+        });
+
+        @if (vacancy.Settlement != null)
+        {
+            @:$.ajax({
+            @:    type: "POST",
+            @:    url: "@Url.Action("GetRegionSettlements", "Settlement")",
+            @:    dataType: "json",
+            @:    data: { regionId: @vacancy.Settlement.Region!.Id },
+            @:    success: function (result) {
+            @:    $.each(result.value, function (i, item) {
+            @:        if (@vacancy.Settlement.Id == item.id)
+            @:        {
+            @:           $("#jobVacancySettlementInput").append($("<option>", {
+            @:                value: item.id,
+            @:                text: item.name
+            @:           }).attr("selected", "selected"));
+            @:        }
+            @:        else
+            @:        {
+            @:            $("#jobVacancySettlementInput").append($("<option>", {
+            @:                value: item.id,
+            @:                text: item.name
+            @:            }));
+            @:        }
+            @:    })
+            @:        console.log(result);
+            @:    }
+            @:});
+        };
+
+        $("#jobVacancyRegionInput").change(function () {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetRegionSettlements", "Settlement")",
+                dataType: "json",
+                data: { regionId: $(this).val() },
+                success: function (result) {
+                    $("#jobVacancySettlementInput").empty()
+                    $.each(result.value, function (i, item) {
+                        $("#jobVacancySettlementInput").append($("<option>", {
+                            value: item.id,
+                            text: item.name
+                        }));
+                    });
+
+                    $("#jobVacancySettlementInput").val([]);
+                    console.log(result);
+                }
+            });
+        });
+    </script>
+}

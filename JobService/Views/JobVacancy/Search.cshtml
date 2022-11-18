@@ -1,0 +1,21 @@
+﻿<div class="container">
+
+    <ul class="list-group">
+        @foreach (var vacancy in Model)
+        {
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-md-9">
+                        <a href="@Url.Action("index", "JobVacancy")/?jobVacancyId=@vacancy.Id">@vacancy.Title</a>
+                    </div>
+                    <div class="col-md-3">
+                        @if (@vacancy.Salary > 0)
+                        {
+                            <div>@vacancy.Salary$</div>
+                        }
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+</div>

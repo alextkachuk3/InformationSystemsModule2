@@ -1,0 +1,22 @@
+﻿<div class="container">
+    <div class="mb-3">
+        <h3>@Model.Title</h3>
+    </div>
+    @if (Model.Salary > 0)
+    {
+        <div>
+            <p>Salary @Model.Salary$</p>
+        </div>
+    }
+    @if (Model.Settlement != null)
+    {
+        <div>
+            <p>@Model.Settlement.Region.Name region, @Model.Settlement.Name</p>
+        </div>
+    }
+    <div class="mb-3">
+        <hr class="hr my-3" />
+        <p>Description:</p>
+        <textarea readonly rows="20" class="form-control">@Model.Description</textarea>
+    </div>
+</div>

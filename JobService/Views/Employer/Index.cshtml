@@ -1,0 +1,53 @@
+﻿<div class="container">
+    <form method="post">
+        @if (Model != null)
+        {
+            @if (Model.Count > 0)
+            {
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>Your job vacancies:</p>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-1"></th>
+                            <th class="col-10">Title</th>
+                            <th class="col-1"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var vacancy in Model)
+                        {
+                            <tr>
+                                <td class="col-1">
+                                    <input name="vacationsIds" class="form-check-input" type="checkbox" value="@vacancy.Id" id="vacancyIdInput- + @vacancy.Id">
+                                </td>
+                                <td class="col-10"><a href="@Url.Action("index", "JobVacancy")?jobVacancyId=@vacancy.Id">@vacancy.Title</a></td>
+
+                                <td class="col-1"><a href="@Url.Action("EditVacancy", "Employer")?jobVacancyId=@vacancy.Id" class="btn btn-warning" id="vacancyEdit + @vacancy.Id">Edit</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>You have not created any vacancies.</p>
+                    </div>
+                </div>
+            }
+        }
+        <div class="row">
+            <div class="col-sm-2">
+                <a asp-area="" asp-controller="Employer" asp-action="AddVacancy" class="btn btn-success">Add vacancy</a>
+            </div>
+            <div class="col-sm-1">
+                <button type="submit" class="btn btn-danger">Remove selected</button>
+            </div>
+        </div>
+    </form>
+</div>
