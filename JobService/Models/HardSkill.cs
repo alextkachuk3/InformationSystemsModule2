@@ -10,5 +10,7 @@ namespace JobService.Models
         public string? Name { get; set; }
 
         public List<User>? Users { get; set; }
+
+        public List<JobVacancy>? JobVacancies { get; set; }
     }
 }
