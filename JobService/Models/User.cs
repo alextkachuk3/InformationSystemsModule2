@@ -14,6 +14,7 @@ namespace JobService.Models
             PasswordHash = password;
             FirstName = firstName;
             LastName = lastName;
+            InSearch = false;
         }
 
         public bool CheckCredentials(string password)
@@ -38,11 +39,16 @@ namespace JobService.Models
         [StringLength(maximumLength: 100)]
         public string? LastName { get; set; }
 
+        public string? PhoneNumber { get; set; }
+
+        public string? Email { get; set; }
+
+        [Required]
+        public bool InSearch { get; set; }
+
         public Settlement? Settlement { get; set; }
 
         public List<HardSkill>? HardSkills { get; set; }
-
-        public List<JobInfo>? JobHistory { get; set; }
 
         public List<JobVacancy>? JobVacancies { get; set; }
     }

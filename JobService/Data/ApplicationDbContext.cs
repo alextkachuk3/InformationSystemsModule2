@@ -16,8 +16,6 @@ namespace JobService.Data
 
         public DbSet<HardSkill>? HardSkills { get; set; }
 
-        public DbSet<JobInfo>? JobHistory { get; set; }
-
         public DbSet<JobVacancy>? JobVacancies { get; set; }
 
     }

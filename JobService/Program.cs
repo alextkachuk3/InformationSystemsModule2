@@ -43,4 +43,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Employer}/{action=Index}/");
 
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Profile}/{action=Index}/");
+
 app.Run();
