@@ -1,12 +1,12 @@
 ﻿@{
     UserDto profile = Model;
-    bool ownProfile = profile.Username == User.Identity.Name;
+    bool ownProfile = profile.Username == User.Identity!.Name;
 }
 
 <div class="container">
     @if(ownProfile)
     {
-        <h2>Own profile:</h2>
+        <h2>Your profile:</h2>
     }
     else
     {
@@ -66,9 +66,7 @@
                 <p class="text-muted mb-0">
                     @if (profile.Settlement is not null)
                     {
-                        @profile.Settlement.Name
-
-                        @:, @profile.Settlement.Region!.Name region
+                        @profile.Settlement.Name@:, @profile.Settlement.Region!.Name region
                     }
                     else
                     {
@@ -96,4 +94,8 @@
             </div>
         </div>
     </div>
+    @if(ownProfile)
+    {
+        <a class="btn btn-primary btn-block" href="@Url.Action("edit", "profile")?username=@profile.Username">Edit profile</a>
+    }
 </div>

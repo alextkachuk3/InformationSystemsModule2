@@ -9,5 +9,9 @@ namespace JobService.Services.UserService
         public void AddUser(string username, string password, string firstName, string lastName);
 
         public User? GetUser(string username);
+
+        public User? GetUserDetailed(string username);
+
+        void UpdateProfile(string username, string firstName, string lastName, string? phoneNumber, string? email, int? settlementId, List<int>? hardSkills);
     }
 }

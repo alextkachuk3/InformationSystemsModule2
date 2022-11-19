@@ -1,6 +1,135 @@
 ﻿<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+@{
+    UserDto profile = Model;
+    bool ownProfile = profile.Username == User.Identity!.Name;
+}
+
 <div>
-    Edit profile:
+    <h4>Edit profile:</h4>
 </div>
+
+<hr>
+
+<form method="post">
+    <input name="vacancyId" type="hidden" value="@profile.Username" />
+    <div class="mb-3">
+        <label for="profileFirstNameInput" class="form-label">First name</label>
+        <input name="firstName" class="form-control" id="profileFirstNameInput" value="@profile.FirstName">
+    </div>
+    <div class="mb-3">
+        <label for="profileLastNameInput" class="form-label">Last name</label>
+        <input name="lastName" class="form-control" id="profileLastNameInput" value="@profile.LastName">
+    </div>
+    <div class="mb-3">
+        <label for="profilePhoneNumberNameInput" class="form-label">Phone number</label>
+        <input name="phoneNumber" class="form-control" id="profilePhoneNumberInput" value="@profile.PhoneNumber">
+    </div>
+    <div class="mb-3">
+        <label for="profileEmailNameInput" class="form-label">Email</label>
+        <input name="email" class="form-control" id="profileEmailInput" value="@profile.Email">
+    </div>
+    <div class="mb-3">
+        <label for="profileRegionInput" class="form-label">Region</label>
+        <select id="profileRegionInput" class="form-select form-select-sm" aria-label=".form-select-sm example">
+            <option selected>Select region</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="profileSettlementInput" class="form-label">Settlement</label>
+        <select name="settlementId" id="profileSettlementInput" class="form-select form-select-sm" aria-label=".form-select-sm example">
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary btn-block">Edit</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetRegions", "Settlement")",
+            dataType: "json",
+            success: function (result) {
+                $.each(result.value, function (i, item) {
+        @if (profile.Settlement != null)
+        {
+            @:if (@profile.Settlement!.Region!.Id == item.id) {
+            @:$("#profileRegionInput").append($("<option>", {
+            @:value: item.id,
+            @:text: item.name
+            @:}).attr("selected", "selected"));
+            @:}
+            @:else {
+            @:$("#profileRegionInput").append($("<option>", {
+            @:value: item.id,
+            @:text: item.name
+            @:}));
+            @:}
+        }
+        else
+        {
+            @:$("#profileRegionInput").append($("<option>", {
+            @:value: item.id,
+            @:text: item.name
+            @:}));
+        }
+                        });
+        console.log(result);
+                    }
+                });
+
+        @if (profile.Settlement != null)
+        {
+            @:$.ajax({
+            @:type: "POST",
+            @:url: "@Url.Action("GetRegionSettlements", "Settlement")",
+            @:dataType: "json",
+            @:data: { regionId: @profile.Settlement.Region!.Id },
+            @:success: function (result) {
+            @:$.each(result.value, function (i, item) {
+            @:        if (@profile.Settlement.Id == item.id)
+            @:{
+            @:$("#profileSettlementInput").append($("<option>", {
+            @:value: item.id,
+            @:text: item.name
+            @:           }).attr("selected", "selected"));
+            @:        }
+            @:        else
+            @:{
+            @:$("#profileSettlementInput").append($("<option>", {
+            @:value: item.id,
+            @:text: item.name
+            @:            }));
+            @:        }
+            @:    })
+            @:console.log(result);
+            @:    }
+            @:});
+        };
+
+        $("#profileRegionInput").change(function () {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetRegionSettlements", "Settlement")",
+                dataType: "json",
+                data: { regionId: $(this).val() },
+                success: function (result) {
+                    $("#profileSettlementInput").empty()
+                    $.each(result.value, function (i, item) {
+                        $("#profileSettlementInput").append($("<option>", {
+                            value: item.id,
+                            text: item.name
+                        }));
+                    });
+
+                    $("#profileSettlementInput").val([]);
+                    console.log(result);
+                }
+            });
+        });
+    </script>
+}

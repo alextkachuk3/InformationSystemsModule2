@@ -54,9 +54,10 @@ namespace JobService.Controllers
             }
             else if(user.CheckCredentials(password))
             {
-                var claims = new List<Claim>();
-
-                claims.Add(new Claim(ClaimTypes.Name, username));
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, username)
+                };
 
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Cookies");
 
