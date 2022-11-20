@@ -1,22 +1,44 @@
-﻿<div class="container">
+﻿@{
+    JobVacancy vacancy = Model;
+}
+
+<div class="container">
     <div class="mb-3">
-        <h3>@Model.Title</h3>
+        <h3>@vacancy.Title</h3>
     </div>
-    @if (Model.Salary > 0)
+    @if (vacancy.Salary > 0)
     {
         <div>
-            <p>Salary @Model.Salary$</p>
+            <p>Salary @vacancy.Salary$</p>
         </div>
     }
-    @if (Model.Settlement != null)
+    @if (vacancy.Settlement is not null)
     {
         <div>
-            <p>@Model.Settlement.Region.Name region, @Model.Settlement.Name</p>
+            <p>@vacancy.Settlement.Region!.Name region, @vacancy.Settlement.Name</p>
         </div>
+    }
+    @if (vacancy.HardSkills is not null)
+    {
+        @if (vacancy.HardSkills.Count > 0)
+        {
+            <hr class="hr my-3" />
+            <p>Requirements:</p>
+            <div class="mb-3">
+                <ul>
+                    @foreach (var hardSkill in vacancy.HardSkills)
+                    {
+                        <li>@hardSkill.Name</li>
+                    }
+                </ul>
+            </div>
+        }
     }
     <div class="mb-3">
         <hr class="hr my-3" />
         <p>Description:</p>
-        <textarea readonly rows="20" class="form-control">@Model.Description</textarea>
+        <textarea readonly rows="20" class="form-control">@vacancy.Description</textarea>
     </div>
+
+
 </div>
