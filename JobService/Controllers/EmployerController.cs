@@ -70,12 +70,12 @@ namespace JobService.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult AddVacancy(string title, int? settlementId, string salary, string description)
+        public IActionResult AddVacancy(string title, int? settlementId, string salary, string description, List<int>? hardSkills)
         {
             var user = HttpContext.User.Identity;
             if (salary == null)
                 salary = "0";
-            _vacancyService.AddVacancy(user!.Name!, title, settlementId, int.Parse(salary), description);
+            _vacancyService.AddVacancy(user!.Name!, title, settlementId, int.Parse(salary), description, hardSkills);
             return LocalRedirect("~/employer");
         }
 
@@ -88,12 +88,12 @@ namespace JobService.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult EditVacancy(int vacancyId, string title, int? settlementId, string salary, string description)
+        public IActionResult EditVacancy(int vacancyId, string title, int? settlementId, string salary, string description, List<int>? hardSkills)
         {
             var user = HttpContext.User.Identity;
             if (salary == null)
                 salary = "0";
-            _vacancyService.EditVacancy(vacancyId, user!.Name!, title, settlementId, int.Parse(salary), description);
+            _vacancyService.EditVacancy(vacancyId, user!.Name!, title, settlementId, int.Parse(salary), description, hardSkills);
             return LocalRedirect("~/employer");
         }
 

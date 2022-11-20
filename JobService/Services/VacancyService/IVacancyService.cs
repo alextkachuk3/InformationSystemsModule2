@@ -5,13 +5,13 @@ namespace JobService.Services.VacancyService
 {
     public interface IVacancyService
     {
-        void AddVacancy(string username, string title, int? settlementId, int salary, string description);
+        void AddVacancy(string username, string title, int? settlementId, int salary, string description, List<int>? hardSkills);
 
         JobVacancy? GetVacancy(int vacancyId);
 
         void DeleteVacancy(int vacancyId, string username);
 
-        void EditVacancy(int vacancyId, string username, string title, int? settlementId, int salary, string description);
+        void EditVacancy(int vacancyId, string username, string title, int? settlementId, int salary, string description, List<int>? hardSkills);
 
         List<JobVacancy> UserJobVacancies(string username);
 

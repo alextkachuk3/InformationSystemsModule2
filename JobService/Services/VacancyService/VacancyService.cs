@@ -13,7 +13,7 @@ namespace JobService.Services.VacancyService
             _dbContext = dbContext;
         }
 
-        public void AddVacancy(string username, string title, int? settlementId, int salary, string description)
+        public void AddVacancy(string username, string title, int? settlementId, int salary, string description, List<int>? hardSkills)
         {
             User? user = _dbContext.Users!.FirstOrDefault(u => u.Username == username);
             if (user is null)
@@ -21,9 +21,13 @@ namespace JobService.Services.VacancyService
             try
             {
                 var jobVacancy = new JobVacancy(user, title, salary, description);
-                if (settlementId != null)
+                if (settlementId is not null)
                 {
                     jobVacancy.Settlement = _dbContext.Settlements!.Where(s => s.Id.Equals(settlementId)).FirstOrDefault();
+                }
+                if(hardSkills is not null)
+                {
+                    jobVacancy.HardSkills = new List<HardSkill>(_dbContext.HardSkills!.Where(v => hardSkills.Contains(v.Id)));
                 }
                 _dbContext.JobVacancies!.Add(jobVacancy);
             }
@@ -61,7 +65,7 @@ namespace JobService.Services.VacancyService
             }
         }
 
-        public void EditVacancy(int vacancyId, string username, string title, int? settlementId, int salary, string description)
+        public void EditVacancy(int vacancyId, string username, string title, int? settlementId, int salary, string description, List<int>? hardSkills)
         {
             User? user = _dbContext.Users!.FirstOrDefault(u => u.Username == username);
             JobVacancy? jobVacancy = _dbContext.JobVacancies!.Where(v => v.Id == vacancyId).Include(v => v.Settlement).FirstOrDefault();
@@ -85,6 +89,16 @@ namespace JobService.Services.VacancyService
                 jobVacancy.Description = description;
                 jobVacancy.TitleLowerCase = title.ToLower();
                 jobVacancy.DescriptionLowerCase = description.ToLower();
+
+                if (jobVacancy.HardSkills is not null)
+                {
+                    jobVacancy.HardSkills.Clear();
+                }
+
+                if (hardSkills is not null)
+                {
+                    jobVacancy.HardSkills = new List<HardSkill>(_dbContext.HardSkills!.Where(v => hardSkills.Contains(v.Id)));
+                }
             }
             catch
             {
@@ -98,7 +112,7 @@ namespace JobService.Services.VacancyService
 
         public JobVacancy? GetVacancy(int vacancyId)
         {
-            return _dbContext.JobVacancies!.Where(v => v.Id.Equals(vacancyId)).Include(v => v.Settlement).ThenInclude(v => v!.Region).FirstOrDefault();
+            return _dbContext.JobVacancies!.Where(v => v.Id.Equals(vacancyId)).Include(v => v.HardSkills).Include(v => v.Settlement).ThenInclude(v => v!.Region).FirstOrDefault();
         }
 
         public List<JobVacancy> SearchJobVacancies(string? searchInput, int? settlementId)
