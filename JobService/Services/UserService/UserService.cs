@@ -44,13 +44,13 @@ namespace JobService.Services.UserService
             return _dbContext.Users?.Where(u => u.Username!.Equals(username)).Count() > 0;
         }
 
-        public void UpdateProfile(string username, string firstName, string lastName, string? phoneNumber, string? email, int? settlementId, List<int>? hardSkills)
+        public void UpdateProfile(string username, string firstName, string lastName, string? phoneNumber, string? email, int? settlementId, bool inSearch, List<int>? hardSkills)
         {
             try
             {
                 var user = GetUserDetailed(username);
 
-                if(user == null)
+                if (user == null)
                 {
                     throw new Exception("User with username:" + username + "not exists!");
                 }
@@ -59,16 +59,17 @@ namespace JobService.Services.UserService
                 user.LastName = lastName;
                 user.PhoneNumber = phoneNumber;
                 user.Email = email;
+                user.InSearch = inSearch;
                 user.Settlement = _dbContext.Settlements!.Where(s => s.Id.Equals(settlementId)).FirstOrDefault();
-                if(user.HardSkills is not null)
+                if (user.HardSkills is not null)
                 {
                     user.HardSkills.Clear();
                 }
-                
+
                 if (hardSkills is not null)
                 {
                     user.HardSkills = new List<HardSkill>(_dbContext.HardSkills!.Where(s => hardSkills.Contains(s.Id)));
-                }                
+                }
             }
             catch
             {

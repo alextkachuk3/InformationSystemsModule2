@@ -12,6 +12,6 @@ namespace JobService.Services.UserService
 
         public User? GetUserDetailed(string username);
 
-        void UpdateProfile(string username, string firstName, string lastName, string? phoneNumber, string? email, int? settlementId, List<int>? hardSkills);
+        void UpdateProfile(string username, string firstName, string lastName, string? phoneNumber, string? email, int? settlementId, bool inSearch, List<int>? hardSkills);
     }
 }
