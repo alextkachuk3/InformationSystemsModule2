@@ -1,4 +1,5 @@
 using JobService.Data;
+using JobService.Services.HardSkillService;
 using JobService.Services.SettlementService;
 using JobService.Services.UserService;
 using JobService.Services.VacancyService;
@@ -24,6 +25,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IVacancyService, VacancyService>();
 builder.Services.AddScoped<ISettlementService, SettlementService>();
+builder.Services.AddScoped<IHardSkillService, HardSkillService>();
 
 var app = builder.Build();
 

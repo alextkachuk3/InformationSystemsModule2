@@ -48,7 +48,7 @@ namespace JobService.Services.UserService
         {
             try
             {
-                var user = GetUser(username);
+                var user = GetUserDetailed(username);
 
                 if(user == null)
                 {
@@ -60,6 +60,15 @@ namespace JobService.Services.UserService
                 user.PhoneNumber = phoneNumber;
                 user.Email = email;
                 user.Settlement = _dbContext.Settlements!.Where(s => s.Id.Equals(settlementId)).FirstOrDefault();
+                if(user.HardSkills is not null)
+                {
+                    user.HardSkills.Clear();
+                }
+                
+                if (hardSkills is not null)
+                {
+                    user.HardSkills = new List<HardSkill>(_dbContext.HardSkills!.Where(s => hardSkills.Contains(s.Id)));
+                }                
             }
             catch
             {

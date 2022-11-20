@@ -1,5 +1,4 @@
-﻿<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+﻿<link href="~/css/select2.min.css" rel="stylesheet" />
 
 @{
     UserDto profile = Model;
@@ -41,6 +40,11 @@
         <select name="settlementId" id="profileSettlementInput" class="form-select form-select-sm" aria-label=".form-select-sm example">
         </select>
     </div>
+    <div class="mb-3">
+        <label for="profileHardSkillsInput" class="form-label">Hard skills</label>
+        <select name="hardSkills" id="profileHardSkillsInput" class="form-select form-select-sm" aria-label=".form-select-sm example" multiple="multiple">
+        </select>
+    </div>
 
     <div class="mb-3">
         <button type="submit" class="btn btn-primary btn-block">Edit</button>
@@ -48,7 +52,31 @@
 </form>
 
 @section Scripts {
+    <script src="~/js/select2.min.js"></script>
+
     <script>
+        $(document).ready(function () {
+            $("#profileHardSkillsInput").select2({
+                placeholder: "Hard skills",
+                ajax: {
+                    type: "POST",
+                    url: "@Url.Action("GetHardSkills", "HardSkill")",
+                    dataType: "json",
+                    data: function (params) {
+                        return {
+                            searchWord: params.term
+                        };
+                    },
+                    processResults: function (data, params) {
+                        console.log(data);
+                        return {
+                            results: data.value
+                        };
+                    }
+                }
+            });
+        });
+
         $.ajax({
             type: "GET",
             url: "@Url.Action("GetRegions", "Settlement")",
@@ -77,10 +105,10 @@
             @:text: item.name
             @:}));
         }
-                        });
+        });
         console.log(result);
-                    }
-                });
+        }
+        });
 
         @if (profile.Settlement != null)
         {
