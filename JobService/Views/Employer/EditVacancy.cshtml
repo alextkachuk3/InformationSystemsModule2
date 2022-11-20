@@ -2,6 +2,8 @@
     JobVacancy vacancy = Model;
 }
 
+<link href="~/css/select2.min.css" rel="stylesheet" />
+
 <form method="post">
     <input name="vacancyId" type="hidden" value="@vacancy.Id" />
     <div class="mb-3">
@@ -30,6 +32,18 @@
         <label for="jobVacancyDescriptionInput" class="form-label">Description</label>
         <textarea name="description" class="form-control" id="jobVacancyDescriptionInput" rows="15">@vacancy.Description</textarea>
     </div>
+    <div class="mb-3">
+        <label for="jobVacancyHardSkillsInput" class="form-label">Hard skills</label>
+        <select name="hardSkills" id="jobVacancyHardSkillsInput" class="form-select form-select-sm" aria-label=".form-select-sm example" multiple="multiple">
+            @if(vacancy.HardSkills is not null)
+            {
+                @foreach (var hardskill in vacancy.HardSkills)
+                {
+                    @:<option value="@hardskill.Id" selected="selected">@hardskill.Name</option>
+                }
+            }
+        </select>
+    </div>
 
     <div class="mb-3">
         <button type="submit" class="btn btn-primary btn-block">Edit</button>
@@ -37,7 +51,31 @@
 </form>
 
 @section Scripts {
+    <script src="~/js/select2.min.js"></script>
+
     <script>
+        $(document).ready(function () {
+            $("#jobVacancyHardSkillsInput").select2({
+                placeholder: "Hard skills",
+                ajax: {
+                    type: "POST",
+                    url: "@Url.Action("GetHardSkills", "HardSkill")",
+                    dataType: "json",
+                    data: function (params) {
+                        return {
+                            searchWord: params.term
+                        };
+                    },
+                    processResults: function (data, params) {
+                        console.log(data);
+                        return {
+                            results: data.value
+                        };
+                    }
+                }
+            });
+        });
+
         $.ajax({
             type: "GET",
             url: "@Url.Action("GetRegions", "Settlement")",
@@ -96,7 +134,7 @@
             @:        console.log(result);
             @:    }
             @:});
-        };
+        };        
 
         $("#jobVacancyRegionInput").change(function () {
             $.ajax({

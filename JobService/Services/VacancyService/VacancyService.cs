@@ -68,7 +68,7 @@ namespace JobService.Services.VacancyService
         public void EditVacancy(int vacancyId, string username, string title, int? settlementId, int salary, string description, List<int>? hardSkills)
         {
             User? user = _dbContext.Users!.FirstOrDefault(u => u.Username == username);
-            JobVacancy? jobVacancy = _dbContext.JobVacancies!.Where(v => v.Id == vacancyId).Include(v => v.Settlement).FirstOrDefault();
+            JobVacancy? jobVacancy = _dbContext.JobVacancies!.Where(v => v.Id == vacancyId).Include(v => v.HardSkills).Include(v => v.Settlement).FirstOrDefault();
             if (user == null)
                 throw new InvalidOperationException("User with username: " + username + " not exists.");
             if (jobVacancy == null)
