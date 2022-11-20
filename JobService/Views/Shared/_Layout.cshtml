@@ -44,10 +44,9 @@
                     <div class="text-end">
                         @if (user != null && user.IsAuthenticated)
                         {
-                            <b class="w-100">
+                            <a href="@Url.Action("index", "profile")?username=@user.Name" class="btn btn-outline-primary">
                                 @user.Name
-                            </b>
-
+                            </a>
                             <a asp-area="" asp-controller="authorization" asp-action="logout" class="btn btn-outline-primary">
                                 Logout
                             </a>

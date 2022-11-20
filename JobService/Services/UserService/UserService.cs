@@ -31,7 +31,7 @@ namespace JobService.Services.UserService
 
         public User? GetUser(string username)
         {
-            return _dbContext.Users?.FirstOrDefault(u => u.Username!.Equals(username));
+            return _dbContext.Users?.Where(u => u.Username!.Equals(username)).Include(u => u.HardSkills).FirstOrDefault();
         }
 
         public User? GetUserDetailed(string username)

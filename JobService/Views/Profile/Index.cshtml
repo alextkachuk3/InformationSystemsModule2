@@ -4,14 +4,14 @@
 }
 
 <div class="container">
-    @if(ownProfile)
+    @if (ownProfile)
     {
         <h2>Your profile:</h2>
     }
     else
     {
         <h2>@profile.Username profile</h2>
-    }    
+    }
     <div class="card-body">
         <div class="row">
             <div class="col-sm-3">
@@ -66,7 +66,9 @@
                 <p class="text-muted mb-0">
                     @if (profile.Settlement is not null)
                     {
-                        @profile.Settlement.Name@:, @profile.Settlement.Region!.Name region
+                        @profile.Settlement.Name
+
+                        @:, @profile.Settlement.Region!.Name region
                     }
                     else
                     {
@@ -93,8 +95,32 @@
                 </p>
             </div>
         </div>
+        <hr>
+        <div class="row">
+            <div class="col-sm-3">
+                <p class="mb-0">Hard skills</p>
+            </div>
+            <div class="col-sm-9">
+                @if (profile.HardSkills is not null)
+                {
+                    @if (profile.HardSkills.Count > 0)
+                    {
+                        <ul>
+                            @foreach (var hardSkill in profile.HardSkills)
+                            {
+                                <li class="text-muted mb-0">@hardSkill.Name</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">Not specified</p>
+                    }
+                }
+            </div>
+        </div>
     </div>
-    @if(ownProfile)
+    @if (ownProfile)
     {
         <a class="btn btn-primary btn-block" href="@Url.Action("edit", "profile")?username=@profile.Username">Edit profile</a>
     }
