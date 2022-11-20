@@ -51,5 +51,7 @@ namespace JobService.Models
         public List<HardSkill>? HardSkills { get; set; }
 
         public List<JobVacancy>? JobVacancies { get; set; }
+
+        public List<SuitableJobSeeker>? SuitableJobs { get; set; }
     }
 }

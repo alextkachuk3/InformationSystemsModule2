@@ -50,5 +50,7 @@ namespace JobService.Models
         public Settlement? Settlement { get; set; }
 
         public List<HardSkill>? HardSkills { get; set; }
+
+        public List<SuitableJobSeeker>? SuitableUsers { get; set; }
     }
 }

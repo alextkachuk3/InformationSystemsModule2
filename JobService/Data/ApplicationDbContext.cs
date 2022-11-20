@@ -18,5 +18,11 @@ namespace JobService.Data
 
         public DbSet<JobVacancy>? JobVacancies { get; set; }
 
+        public DbSet<SuitableJobSeeker>? SuitableJobSeekers { get; set; }
+
+        public DbSet<HardSkillSalaryIndicator>? HardSkillSalaryIndicators { get; set; }
+
+        public DbSet<HardSkillSuccessVacationsIndicator>? HardSkillSuccessVacationsIndicators { get; set; }
+
     }
 }
