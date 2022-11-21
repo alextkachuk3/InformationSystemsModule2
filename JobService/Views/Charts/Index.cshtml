@@ -17,7 +17,7 @@
             var chart = new CanvasJS.Chart("chartContainer", {
                 animationEnabled: true,
                 title: {
-                    text: "Rendering Chart with dataPoints from External JSON"
+                    text: "Average salary"
                 },
                 data: [{
                     type: "line",
@@ -34,7 +34,7 @@
                 success: function (data) {
                     console.log(data);
                     $.each(data.value, function (key, value) {
-                        if(value == null)
+                        if(value.salaryAvg == null)
                         {
                             dataPoints.push({ x: key, y: 0 });
                         }

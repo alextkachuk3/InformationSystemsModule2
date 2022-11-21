@@ -12,17 +12,25 @@ namespace JobService.Services.IndicatorsService
             _dbContext = dbContext;
         }
 
-        public List<HardSkillSalaryIndicator?> GetHardSkillSalaryIndicators(int hardSkillId, int monthCount)
+        public List<HardSkillSalaryIndicatorDto?> GetHardSkillSalaryIndicators(int hardSkillId, int monthCount)
         {
-            List<HardSkillSalaryIndicator?> result = new List<HardSkillSalaryIndicator?>();
+            List<HardSkillSalaryIndicatorDto?> result = new List<HardSkillSalaryIndicatorDto?>();
             HardSkill? hardSkill = _dbContext.HardSkills!.FirstOrDefault(s => s.Id == hardSkillId);
             DateTime dateTime = DateTime.Now;
 
             for (int i = monthCount - 1; i >= 0; i--)
             {
-                result.Add(_dbContext.HardSkillSalaryIndicators!.FirstOrDefault(s => s.HardSkill!.Equals(hardSkill) &&
+                var ind = _dbContext.HardSkillSalaryIndicators!.FirstOrDefault(s => s.HardSkill!.Equals(hardSkill) &&
                                                                                 s.Year.Equals(dateTime.AddMonths(-i).Year) &&
-                                                                                s.Month.Equals(dateTime.AddMonths(-i).Month)));
+                                                                                s.Month.Equals(dateTime.AddMonths(-i).Month));
+                if(ind is null)
+                {
+                    result.Add(new HardSkillSalaryIndicatorDto(dateTime.AddMonths(-i).Year, dateTime.AddMonths(-i).Month, null));
+                }
+                else
+                {
+                    result.Add(new HardSkillSalaryIndicatorDto(dateTime.AddMonths(-i).Year, dateTime.AddMonths(-i).Month, ind.SalaryAvg));
+                }                
             }
 
             return result;

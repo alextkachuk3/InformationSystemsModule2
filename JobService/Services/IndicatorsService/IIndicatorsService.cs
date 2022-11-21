@@ -4,6 +4,6 @@ namespace JobService.Services.IndicatorsService
 {
     public interface IIndicatorsService
     {
-        public List<HardSkillSalaryIndicator?> GetHardSkillSalaryIndicators(int hardSkillId, int monthCount);
+        public List<HardSkillSalaryIndicatorDto?> GetHardSkillSalaryIndicators(int hardSkillId, int monthCount);
     }
 }
