@@ -86,9 +86,16 @@ namespace JobService.Services.VacancyService
 
                 jobVacancy.Title = title;
                 jobVacancy.Salary = salary;
-                jobVacancy.Description = description;
+                if(description is not null)
+                {
+                    jobVacancy.Description = description;
+                }
+                else
+                {
+                    jobVacancy.Description = string.Empty;
+                }
                 jobVacancy.TitleLowerCase = title.ToLower();
-                jobVacancy.DescriptionLowerCase = description.ToLower();
+                jobVacancy.DescriptionLowerCase = jobVacancy.Description.ToLower();
 
                 if (jobVacancy.HardSkills is not null)
                 {

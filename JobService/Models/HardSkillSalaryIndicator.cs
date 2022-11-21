@@ -5,7 +5,9 @@ namespace JobService.Models
     [Keyless]
     public class HardSkillSalaryIndicator
     {
-        public DateTime DateTime { get; set; }
+        public int Year { get; set; }
+
+        public int Month { get; set; }
 
         public HardSkill? HardSkill { get; set; }
         

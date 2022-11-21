@@ -7,14 +7,22 @@ namespace JobService.Models
     {
         public JobVacancy() { }
 
-        public JobVacancy(User user, string title, int salary, string description)
+        public JobVacancy(User user, string title, int salary, string? description)
         {
             User = user;
             Title = title;
-            Salary = salary;
-            Description = description;
+            Salary = salary;            
             TitleLowerCase = title.ToLower();
-            DescriptionLowerCase = description.ToLower();
+            if (description is null)
+            {
+                Description = string.Empty;
+            }
+            else 
+            {
+                Description = description;
+            }
+            DescriptionLowerCase = Description.ToLower();
+
             creationTime = DateTime.Now;
         }
 
@@ -30,11 +38,11 @@ namespace JobService.Models
         [Required]
         [StringLength(maximumLength: 3000)]
         public string? Description { get; set; }
-        
+
         [Required]
         [StringLength(maximumLength: 100)]
         public string? TitleLowerCase { get; set; }
-        
+
         [Required]
         [StringLength(maximumLength: 3000)]
         public string? DescriptionLowerCase { get; set; }
