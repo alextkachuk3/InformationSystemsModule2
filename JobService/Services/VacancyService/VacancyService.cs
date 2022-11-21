@@ -128,7 +128,7 @@ namespace JobService.Services.VacancyService
             {
                 if (settlementId == null)
                 {
-                    return _dbContext.JobVacancies!.OrderBy(v => v.creationTime).Where(v => v.TitleLowerCase!.Contains(searchInput) || v.DescriptionLowerCase!.Contains(searchInput)).ToList();
+                    return _dbContext.JobVacancies!.OrderBy(v => v.CreationTime).Where(v => v.TitleLowerCase!.Contains(searchInput) || v.DescriptionLowerCase!.Contains(searchInput)).ToList();
                 }
                 else
                 {

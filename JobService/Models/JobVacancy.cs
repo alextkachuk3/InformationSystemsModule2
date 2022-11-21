@@ -11,19 +11,20 @@ namespace JobService.Models
         {
             User = user;
             Title = title;
-            Salary = salary;            
+            Salary = salary;
             TitleLowerCase = title.ToLower();
+            Opened = true;
             if (description is null)
             {
                 Description = string.Empty;
             }
-            else 
+            else
             {
                 Description = description;
             }
             DescriptionLowerCase = Description.ToLower();
 
-            creationTime = DateTime.Now;
+            CreationTime = DateTime.Now;
         }
 
         public int Id { get; set; }
@@ -51,9 +52,11 @@ namespace JobService.Models
         public int Salary { get; set; }
 
         [Required]
-        public bool Remote { get; set; }
+        public bool Opened { get; set; }
 
-        public DateTime creationTime { get; set; }
+        public bool Success { get; set; }
+
+        public DateTime CreationTime { get; set; }
 
         public Settlement? Settlement { get; set; }
 
