@@ -16,7 +16,7 @@ BEGIN
 			SET 
 				hardskillsalaryindicators.VacationsCount = hardskillsalaryindicators.VacationsCount + 1,
 				hardskillsalaryindicators.SalarySum = hardskillsalaryindicators.SalarySum + @vacancy_salary,
-				hardskillsalaryindicators.SalaryAvg = hardskillsalaryindicators.SalarySum / hardskillsalaryindicators.VacationsCount
+				hardskillsalaryindicators.SalaryAvg = (hardskillsalaryindicators.SalarySum + @vacancy_salary) / hardskillsalaryindicators.VacationsCount
 			WHERE
 				hardskillsalaryindicators.HardSkillId = NEW.HardSkillsId AND
 				hardskillsalaryindicators.Year = YEAR(@vacancy_datetime) AND

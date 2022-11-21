@@ -3,6 +3,16 @@
 }
 
 <link href="~/css/select2.min.css" rel="stylesheet" />
+<link href="~/css/jquery-ui.min.css" rel="stylesheet" />
+
+<div id="dialog" title="Have you found an employee?">
+    <table>
+        <tr>
+            <td><a href="#" class="btn btn-primary btn-block">Yes</a></td>
+            <td><a href="#" class="btn btn-primary btn-block">No</a></td>
+        </tr>
+    </table>
+</div>
 
 <form method="post">
     <input name="vacancyId" type="hidden" value="@vacancy.Id" />
@@ -35,23 +45,27 @@
     <div class="mb-3">
         <label for="jobVacancyHardSkillsInput" class="form-label">Hard skills</label>
         <select name="hardSkills" id="jobVacancyHardSkillsInput" class="form-select form-select-sm" aria-label=".form-select-sm example" multiple="multiple">
-            @if(vacancy.HardSkills is not null)
+            @if (vacancy.HardSkills is not null)
             {
                 @foreach (var hardskill in vacancy.HardSkills)
                 {
-                    @:<option value="@hardskill.Id" selected="selected">@hardskill.Name</option>
+                    @:
+                    <option value="@hardskill.Id" selected="selected">@hardskill.Name</option>
                 }
             }
         </select>
     </div>
-
-    <div class="mb-3">
-        <button type="submit" class="btn btn-primary btn-block">Edit</button>
-    </div>
+    <table>
+        <tr>
+            <td><button type="submit" class="btn btn-primary btn-block">Edit</button></td>
+            <td><a href="#" id="opener" class="btn btn-primary btn-block">Close</a></td>
+        </tr>
+    </table>
 </form>
 
 @section Scripts {
     <script src="~/js/select2.min.js"></script>
+    <script src="~/js/jquery-ui.min.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -74,6 +88,13 @@
                     }
                 }
             });
+
+            $("#dialog").dialog({
+                autoOpen: false,
+            });
+            $("#opener").click(function () {
+                $("#dialog").dialog("open");
+            });
         });
 
         $.ajax({
@@ -82,59 +103,61 @@
             dataType: "json",
             success: function (result) {
                 $.each(result.value, function (i, item) {
-                    @if (vacancy.Settlement != null) {
-                        @:if (@vacancy.Settlement!.Region!.Id == item.id) {
-                            @:$("#jobVacancyRegionInput").append($("<option>", {
-                            @:    value: item.id,
-                            @:    text: item.name
-                            @:}).attr("selected", "selected"));
-                        @:}
-                        @:else {
-                            @:$("#jobVacancyRegionInput").append($("<option>", {
-                            @:    value: item.id,
-                            @:    text: item.name
-                            @:}));
-                        @:}
-                    }
-                    else {
-                        @:$("#jobVacancyRegionInput").append($("<option>", {
-                        @:    value: item.id,
-                        @:    text: item.name
-                        @:}));
-                    }
-                });
-                console.log(result);
-            }
-        });
+        @if (vacancy.Settlement != null)
+        {
+            @:if (@vacancy.Settlement!.Region!.Id == item.id) {
+            @:$("#jobVacancyRegionInput").append($("<option>", {
+            @:value: item.id,
+            @:text: item.name
+            @:}).attr("selected", "selected"));
+            @:}
+            @:else {
+            @:$("#jobVacancyRegionInput").append($("<option>", {
+            @:value: item.id,
+            @:text: item.name
+            @:}));
+            @:}
+        }
+        else
+        {
+            @:$("#jobVacancyRegionInput").append($("<option>", {
+            @:value: item.id,
+            @:text: item.name
+            @:}));
+        }
+                                });
+        console.log(result);
+                            }
+                        });
 
         @if (vacancy.Settlement != null)
         {
             @:$.ajax({
-            @:    type: "POST",
-            @:    url: "@Url.Action("GetRegionSettlements", "Settlement")",
-            @:    dataType: "json",
-            @:    data: { regionId: @vacancy.Settlement.Region!.Id },
-            @:    success: function (result) {
-            @:    $.each(result.value, function (i, item) {
+            @:type: "POST",
+            @:url: "@Url.Action("GetRegionSettlements", "Settlement")",
+            @:dataType: "json",
+            @:data: { regionId: @vacancy.Settlement.Region!.Id },
+            @:success: function (result) {
+            @:$.each(result.value, function (i, item) {
             @:        if (@vacancy.Settlement.Id == item.id)
-            @:        {
-            @:           $("#jobVacancySettlementInput").append($("<option>", {
-            @:                value: item.id,
-            @:                text: item.name
+            @:{
+            @:$("#jobVacancySettlementInput").append($("<option>", {
+            @:value: item.id,
+            @:text: item.name
             @:           }).attr("selected", "selected"));
             @:        }
             @:        else
-            @:        {
-            @:            $("#jobVacancySettlementInput").append($("<option>", {
-            @:                value: item.id,
-            @:                text: item.name
+            @:{
+            @:$("#jobVacancySettlementInput").append($("<option>", {
+            @:value: item.id,
+            @:text: item.name
             @:            }));
             @:        }
             @:    })
-            @:        console.log(result);
+            @:console.log(result);
             @:    }
             @:});
-        };        
+        };
 
         $("#jobVacancyRegionInput").change(function () {
             $.ajax({
