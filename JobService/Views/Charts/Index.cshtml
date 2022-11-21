@@ -1,14 +1,10 @@
-﻿@{
-
-}
-
-<div class="container">
+﻿<div class="container">
     Charts
-    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+    <div id="chartContainer" style="height: 300px; width: 100%;">
+    </div>
 </div>
 
-@section Scripts
-    {
+@section Scripts {
     <script src="~/js/canvasjs.min.js"></script>
 
     <script>
@@ -19,12 +15,20 @@
                 title: {
                     text: "Average salary"
                 },
+                axisX: {
+                    valueFormatString: "MMM"
+                },
+                axisY: {
+                    title: "Average salary (in USD)",
+                    prefix: "$"
+                },
                 data: [{
-                    type: "line",
+                    yValueFormatString: "$#,###",
+                    xValueFormatString: "MMMM",
+                    type: "spline",
                     dataPoints: dataPoints,
                 }]
             });
-
 
             $.ajax({
                 type: "POST",
@@ -34,15 +38,13 @@
                 success: function (data) {
                     console.log(data);
                     $.each(data.value, function (key, value) {
-                        if(value.salaryAvg == null)
-                        {
-                            dataPoints.push({ x: key, y: 0 });
+                        if (value.salaryAvg == null) {
+                            dataPoints.push({ x: new Date(value.year, value.month - 1), y: 0 });
                         }
-                        else
-                        {
-                            dataPoints.push({ x: key, y: value.salaryAvg });
+                        else {
+                            dataPoints.push({ x: new Date(value.year, value.month - 1), y: value.salaryAvg });
                         }
-                        
+
                     });
                     chart.render();
                 }
