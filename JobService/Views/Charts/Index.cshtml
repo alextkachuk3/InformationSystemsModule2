@@ -1,54 +1,93 @@
-﻿<div class="container">
+﻿<link href="~/css/select2.min.css" rel="stylesheet" />
+
+<div class="container">
     Charts
-    <div id="chartContainer" style="height: 300px; width: 100%;">
+    <div class="row">
+        <div id="chartContainer" style="height: 500px;" />
+    </div>
+    <hr>
+    <div class="row">
+        <div class="mb-3">
+            <select name="hardSkills" id="HardSkillsInput" class="form-select form-select-sm" aria-label=".form-select-sm example">
+            </select>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <script src="~/js/canvasjs.min.js"></script>
+    <script src="~/js/select2.min.js"></script>
 
     <script>
         window.onload = function () {
             var dataPoints = [];
-            var chart = new CanvasJS.Chart("chartContainer", {
-                animationEnabled: true,
-                title: {
-                    text: "Average salary"
-                },
-                axisX: {
-                    valueFormatString: "MMM"
-                },
-                axisY: {
-                    title: "Average salary (in USD)",
-                    prefix: "$"
-                },
-                data: [{
-                    yValueFormatString: "$#,###",
-                    xValueFormatString: "MMMM",
-                    type: "spline",
-                    dataPoints: dataPoints,
-                }]
-            });
 
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("hardSkillYearSallaryIndicators", "Indicators")",
-                dataType: "json",
-                data: { hardSkillId: 3 },
-                success: function (data) {
-                    console.log(data);
-                    $.each(data.value, function (key, value) {
-                        if (value.salaryAvg == null) {
-                            dataPoints.push({ x: new Date(value.year, value.month - 1), y: 0 });
-                        }
-                        else {
-                            dataPoints.push({ x: new Date(value.year, value.month - 1), y: value.salaryAvg });
-                        }
-
-                    });
-                    chart.render();
+            $("#HardSkillsInput").change(function () {
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    animationEnabled: true,
+                    title: {
+                        text: "Average salary"
+                    },
+                    axisX: {
+                        valueFormatString: "MMM"
+                    },
+                    axisY: {
+                        title: "Average salary (in USD)",
+                        prefix: "$"
+                    },
+                    data: [{
+                        yValueFormatString: "$#,###",
+                        xValueFormatString: "MMMM",
+                        type: "spline",
+                        dataPoints: dataPoints,
+                    }]
+                });
+                while (dataPoints.length > 0) {
+                    dataPoints.pop();
                 }
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("hardSkillYearSallaryIndicators", "Indicators")",
+                    dataType: "json",
+                    data: { hardSkillId: $(this).val() },
+                    success: function (data) {
+                        console.log(data);
+                        $.each(data.value, function (key, value) {
+                            if (value.salaryAvg == null) {
+                                dataPoints.push({ x: new Date(value.year, value.month - 1), y: 0 });
+                            }
+                            else {
+                                dataPoints.push({ x: new Date(value.year, value.month - 1), y: value.salaryAvg });
+                            }
+
+                        });
+
+                        chart.render();
+                    }
+                });
             });
         }
+
+        $(document).ready(function () {
+            $("#HardSkillsInput").select2({
+                placeholder: "Hard skills",
+                ajax: {
+                    type: "POST",
+                    url: "@Url.Action("GetHardSkills", "HardSkill")",
+                    dataType: "json",
+                    data: function (params) {
+                        return {
+                            searchWord: params.term
+                        };
+                    },
+                    processResults: function (data, params) {
+                        console.log(data);
+                        return {
+                            results: data.value
+                        };
+                    }
+                }
+            });
+        });
     </script>
 }
