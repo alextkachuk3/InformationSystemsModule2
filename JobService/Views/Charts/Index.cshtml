@@ -1,0 +1,52 @@
+﻿@{
+
+}
+
+<div class="container">
+    Charts
+    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+</div>
+
+@section Scripts
+    {
+    <script src="~/js/canvasjs.min.js"></script>
+
+    <script>
+        window.onload = function () {
+            var dataPoints = [];
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                title: {
+                    text: "Rendering Chart with dataPoints from External JSON"
+                },
+                data: [{
+                    type: "line",
+                    dataPoints: dataPoints,
+                }]
+            });
+
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("hardSkillYearSallaryIndicators", "Indicators")",
+                dataType: "json",
+                data: { hardSkillId: 3 },
+                success: function (data) {
+                    console.log(data);
+                    $.each(data.value, function (key, value) {
+                        if(value == null)
+                        {
+                            dataPoints.push({ x: key, y: 0 });
+                        }
+                        else
+                        {
+                            dataPoints.push({ x: key, y: value.salaryAvg });
+                        }
+                        
+                    });
+                    chart.render();
+                }
+            });
+        }
+    </script>
+}

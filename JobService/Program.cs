@@ -1,5 +1,6 @@
 using JobService.Data;
 using JobService.Services.HardSkillService;
+using JobService.Services.IndicatorsService;
 using JobService.Services.SettlementService;
 using JobService.Services.UserService;
 using JobService.Services.VacancyService;
@@ -26,6 +27,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IVacancyService, VacancyService>();
 builder.Services.AddScoped<ISettlementService, SettlementService>();
 builder.Services.AddScoped<IHardSkillService, HardSkillService>();
+builder.Services.AddScoped<IIndicatorsService, IndicatorsService>();
 
 var app = builder.Build();
 
