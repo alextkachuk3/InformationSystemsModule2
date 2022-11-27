@@ -47,11 +47,12 @@
     <div class="mb-3">
         <label for="profileHardSkillsInput" class="form-label">Hard skills</label>
         <select name="hardSkills" id="profileHardSkillsInput" class="form-select form-select-sm" aria-label=".form-select-sm example" multiple="multiple">
-            @if(profile.HardSkills is not null)
+            @if (profile.HardSkills is not null)
             {
-                @foreach(var hardSkill in profile.HardSkills)
+                @foreach (var hardSkill in profile.HardSkills)
                 {
-                    @:<option value="@hardSkill.Id" selected="selected">@hardSkill.Name</option>
+                    @:
+                    <option value="@hardSkill.Id" selected="selected">@hardSkill.Name</option>
                 }
             }
         </select>
@@ -85,8 +86,22 @@
                         };
                     }
                 }
-            });
+            });            
         });
+
+        let settlementDefined;
+        @if (profile.Settlement == null)
+        {
+            @:settlementDefined = false;
+        }
+        else
+        {
+            @:settlementDefined = true;
+            @:oldSettlementId = @profile.Settlement.Id;
+            @:oldRegionId = @profile.Settlement.Region!.Id;
+        };
+
+        console.log(settlementDefined);
 
         $.ajax({
             type: "GET",
@@ -94,60 +109,55 @@
             dataType: "json",
             success: function (result) {
                 $.each(result.value, function (i, item) {
-        @if (profile.Settlement != null)
-        {
-            @:if (@profile.Settlement!.Region!.Id == item.id) {
-            @:$("#profileRegionInput").append($("<option>", {
-            @:value: item.id,
-            @:text: item.name
-            @:}).attr("selected", "selected"));
-            @:}
-            @:else {
-            @:$("#profileRegionInput").append($("<option>", {
-            @:value: item.id,
-            @:text: item.name
-            @:}));
-            @:}
-        }
-        else
-        {
-            @:$("#profileRegionInput").append($("<option>", {
-            @:value: item.id,
-            @:text: item.name
-            @:}));
-        }
-        });
-        console.log(result);
-        }
+                    if (settlementDefined) {
+                        if (oldRegionId == item.id) {
+                            $("#profileRegionInput").append($("<option>", {
+                                value: item.id,
+                                text: item.name
+                            }).attr("selected", "selected"));
+                        }
+                        else {
+                            $("#profileRegionInput").append($("<option>", {
+                                value: item.id,
+                                text: item.name
+                            }));
+                        }
+                    }
+                    else {
+                        $("#profileRegionInput").append($("<option>", {
+                            value: item.id,
+                            text: item.name
+                        }));
+                    }
+                });
+                console.log(result);
+            }
         });
 
-        @if (profile.Settlement != null)
-        {
-            @:$.ajax({
-            @:type: "POST",
-            @:url: "@Url.Action("GetRegionSettlements", "Settlement")",
-            @:dataType: "json",
-            @:data: { regionId: @profile.Settlement.Region!.Id },
-            @:success: function (result) {
-            @:$.each(result.value, function (i, item) {
-            @:        if (@profile.Settlement.Id == item.id)
-            @:{
-            @:$("#profileSettlementInput").append($("<option>", {
-            @:value: item.id,
-            @:text: item.name
-            @:           }).attr("selected", "selected"));
-            @:        }
-            @:        else
-            @:{
-            @:$("#profileSettlementInput").append($("<option>", {
-            @:value: item.id,
-            @:text: item.name
-            @:            }));
-            @:        }
-            @:    })
-            @:console.log(result);
-            @:    }
-            @:});
+        if (settlementDefined) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetRegionSettlements", "Settlement")",
+                dataType: "json",
+                data: { regionId: oldRegionId },
+                success: function (result) {
+                    $.each(result.value, function (i, item) {
+                        if (oldSettlementId.Id == item.id) {
+                            $("#profileSettlementInput").append($("<option>", {
+                                value: item.id,
+                                text: item.name
+                            }).attr("selected", "selected"));
+                        }
+                        else {
+                            $("#profileSettlementInput").append($("<option>", {
+                                value: item.id,
+                                text: item.name
+                            }));
+                        }
+                    })
+                    console.log(result);
+                }
+            });
         };
 
         $("#profileRegionInput").change(function () {
@@ -170,5 +180,6 @@
                 }
             });
         });
+
     </script>
 }

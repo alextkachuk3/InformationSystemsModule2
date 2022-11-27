@@ -37,7 +37,7 @@ namespace JobService.Controllers
             }
             else
             {
-                var user = _userService.GetUser(username);
+                var user = _userService.GetUserDetailed(username);
                 return View(new UserDto(user!.Username, user.FirstName, user.LastName, user.PhoneNumber, user.Email, user.InSearch, user.Settlement, user.HardSkills));
             }
         }

@@ -97,67 +97,82 @@
             });
         });
 
+        let settlementDefined;
+        let settlementId;
+        let regionId;
+        @if (vacancy.Settlement == null)
+        {
+            @:settlementDefined = false;
+        }
+        else
+        {
+            @:settlementDefined = true;
+            @:oldSettlementId = @vacancy.Settlement.Id;
+            @:oldRegionId = @vacancy.Settlement.Region!.Id;
+        };
+
+        console.log(settlementDefined);
+
+        if (settlementDefined) {
+            console.log("test");
+        }
+
         $.ajax({
             type: "GET",
             url: "@Url.Action("GetRegions", "Settlement")",
             dataType: "json",
             success: function (result) {
                 $.each(result.value, function (i, item) {
-        @if (vacancy.Settlement != null)
-        {
-            @:if (@vacancy.Settlement!.Region!.Id == item.id) {
-            @:$("#jobVacancyRegionInput").append($("<option>", {
-            @:value: item.id,
-            @:text: item.name
-            @:}).attr("selected", "selected"));
-            @:}
-            @:else {
-            @:$("#jobVacancyRegionInput").append($("<option>", {
-            @:value: item.id,
-            @:text: item.name
-            @:}));
-            @:}
-        }
-        else
-        {
-            @:$("#jobVacancyRegionInput").append($("<option>", {
-            @:value: item.id,
-            @:text: item.name
-            @:}));
-        }
-                                });
-        console.log(result);
-                            }
-                        });
+                    if (settlementDefined) {
+                        if (oldRegionId == item.id) {
+                            $("#jobVacancyRegionInput").append($("<option>", {
+                                value: item.id,
+                                text: item.name
+                            }).attr("selected", "selected"));
+                        }
+                        else {
+                            $("#jobVacancyRegionInput").append($("<option>", {
+                                value: item.id,
+                                text: item.name
+                            }));
+                        }
+                    }
+                    else {
+                        $("#jobVacancyRegionInput").append($("<option>", {
+                            value: item.id,
+                            text: item.name
+                        }));
+                    }
+                });
+                console.log(result);
+            }
+        });
 
-        @if (vacancy.Settlement != null)
-        {
-            @:$.ajax({
-            @:type: "POST",
-            @:url: "@Url.Action("GetRegionSettlements", "Settlement")",
-            @:dataType: "json",
-            @:data: { regionId: @vacancy.Settlement.Region!.Id },
-            @:success: function (result) {
-            @:$.each(result.value, function (i, item) {
-            @:        if (@vacancy.Settlement.Id == item.id)
-            @:{
-            @:$("#jobVacancySettlementInput").append($("<option>", {
-            @:value: item.id,
-            @:text: item.name
-            @:           }).attr("selected", "selected"));
-            @:        }
-            @:        else
-            @:{
-            @:$("#jobVacancySettlementInput").append($("<option>", {
-            @:value: item.id,
-            @:text: item.name
-            @:            }));
-            @:        }
-            @:    })
-            @:console.log(result);
-            @:    }
-            @:});
-        };
+        if (settlementDefined) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetRegionSettlements", "Settlement")",
+                dataType: "json",
+                data: { regionId: oldRegionId },
+                success: function (result) {
+                    $.each(result.value, function (i, item) {
+                        if (oldSettlementId == item.id) {
+                            $("#jobVacancySettlementInput").append($("<option>", {
+                                value: item.id,
+                                text: item.name
+                            }).attr("selected", "selected"));
+                        }
+                        else {
+                            $("#jobVacancySettlementInput").append($("<option>", {
+                                value: item.id,
+                                text: item.name
+                            }));
+                        }
+                    })
+                    console.log(result);
+                }
+            });
+        }
 
         $("#jobVacancyRegionInput").change(function () {
             $.ajax({
@@ -179,5 +194,6 @@
                 }
             });
         });
+
     </script>
 }
