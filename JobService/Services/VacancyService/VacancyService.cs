@@ -41,6 +41,31 @@ namespace JobService.Services.VacancyService
             }
         }
 
+        public void CloseVacancy(int vacancyId, bool vacancySuccess, string username)
+        {
+            User? user = _dbContext.Users!.FirstOrDefault(u => u.Username == username);
+            var jobVacancy = _dbContext.JobVacancies!.Where(v => v.Id.Equals(vacancyId)).FirstOrDefault();
+            if (user is null)
+                throw new InvalidOperationException("User with username: " + username + " not exists.");
+            else if (jobVacancy == null)
+                throw new InvalidOperationException("Job vacancy with id: " + vacancyId + " not exists.");
+            else if (jobVacancy.User != user)
+                throw new InvalidOperationException("User with username: " + username + " is not owner of vacancy with id " + vacancyId + ".");
+            try
+            {
+                jobVacancy.Success = vacancySuccess;
+                jobVacancy.Opened = false;
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                _dbContext.SaveChanges();
+            }
+        }
+
         public void DeleteVacancy(int vacancyId, string username)
         {
             User? user = _dbContext.Users!.FirstOrDefault(u => u.Username == username);

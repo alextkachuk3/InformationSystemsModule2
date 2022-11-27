@@ -56,7 +56,7 @@ namespace JobService.Controllers
             if (vacationsIds == null)
                 return Index();
             foreach (var id in vacationsIds)
-            {                
+            {
                 _vacancyService.DeleteVacancy(id, HttpContext.User!.Identity!.Name!);
             }
             return Index();
@@ -88,14 +88,21 @@ namespace JobService.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult EditVacancy(int vacancyId, string title, int? settlementId, string salary, string description, List<int>? hardSkills)
+        public IActionResult EditVacancy(int vacancyId, bool closeVacancy, bool vacancySuccess, string title, int? settlementId, string salary, string description, List<int>? hardSkills)
         {
             var user = HttpContext.User.Identity;
-            if (salary == null)
-                salary = "0";
-            _vacancyService.EditVacancy(vacancyId, user!.Name!, title, settlementId, int.Parse(salary), description, hardSkills);
+            if (closeVacancy)
+            {
+                _vacancyService.CloseVacancy(vacancyId, vacancySuccess, HttpContext.User!.Identity!.Name!);
+            }
+            else
+            {
+                if (salary == null)
+                    salary = "0";
+                _vacancyService.EditVacancy(vacancyId, user!.Name!, title, settlementId, int.Parse(salary), description, hardSkills);
+            }
             return Redirect("~/employer");
-        }   
+        }
 
         public IActionResult ToJobseekerMode()
         {

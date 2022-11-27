@@ -6,16 +6,20 @@
 <link href="~/css/jquery-ui.min.css" rel="stylesheet" />
 
 <div id="dialog" title="Have you found an employee?">
-    <table>
-        <tr>
-            <td><a href="#" class="btn btn-primary btn-block">Yes</a></td>
-            <td><a href="#" class="btn btn-primary btn-block">No</a></td>
-        </tr>
-    </table>
+    <form method="post">
+        <table>
+            <tr>
+                <input name="vacancyId" type="hidden" value="@vacancy.Id">
+                <input type="hidden" name="closeVacancy" value="true">
+                <td><button type="submit" name="vacancySuccess" value="true" class="btn btn-primary btn-block">Yes</button></td>
+                <td><button type="submit" name="vacancySuccess" value="false" class="btn btn-primary btn-block">No</button></td>
+            </tr>
+        </table>
+    </form>
 </div>
 
 <form method="post">
-    <input name="vacancyId" type="hidden" value="@vacancy.Id" />
+    <input name="vacancyId" type="hidden" value="@vacancy.Id">
     <div class="mb-3">
         <label for="jobVacancyTitleInput" class="form-label">Title</label>
         <input name="title" class="form-control" id="jobVacancyTitleInput" value="@vacancy.Title">

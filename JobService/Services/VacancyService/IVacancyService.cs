@@ -13,6 +13,8 @@ namespace JobService.Services.VacancyService
 
         void EditVacancy(int vacancyId, string username, string title, int? settlementId, int salary, string description, List<int>? hardSkills);
 
+        void CloseVacancy(int vacancyId, bool vacancySuccess, string username);
+
         List<JobVacancy> UserJobVacancies(string username);
 
         List<JobVacancy> SearchJobVacancies(string? searchInput, int? settlementId);
