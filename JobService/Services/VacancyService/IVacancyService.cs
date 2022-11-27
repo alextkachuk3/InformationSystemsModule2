@@ -1,5 +1,4 @@
-﻿using JobService.Data;
-using JobService.Models;
+﻿using JobService.Models;
 
 namespace JobService.Services.VacancyService
 {

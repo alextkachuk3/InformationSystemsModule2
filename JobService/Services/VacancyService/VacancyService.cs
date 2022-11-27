@@ -25,7 +25,7 @@ namespace JobService.Services.VacancyService
                 {
                     jobVacancy.Settlement = _dbContext.Settlements!.Where(s => s.Id.Equals(settlementId)).FirstOrDefault();
                 }
-                if(hardSkills is not null)
+                if (hardSkills is not null)
                 {
                     jobVacancy.HardSkills = new List<HardSkill>(_dbContext.HardSkills!.Where(v => hardSkills.Contains(v.Id)));
                 }
@@ -111,7 +111,7 @@ namespace JobService.Services.VacancyService
 
                 jobVacancy.Title = title;
                 jobVacancy.Salary = salary;
-                if(description is not null)
+                if (description is not null)
                 {
                     jobVacancy.Description = description;
                 }
@@ -149,29 +149,17 @@ namespace JobService.Services.VacancyService
 
         public List<JobVacancy> SearchJobVacancies(string? searchInput, int? settlementId)
         {
+            var result = _dbContext.JobVacancies!.AsQueryable<JobVacancy>();
+            result = result.Where(v => v.Opened.Equals(true));
             if (searchInput != null)
             {
-                if (settlementId == null)
-                {
-                    return _dbContext.JobVacancies!.OrderBy(v => v.CreationTime).Where(v => v.TitleLowerCase!.Contains(searchInput) || v.DescriptionLowerCase!.Contains(searchInput)).ToList();
-                }
-                else
-                {
-                    return _dbContext.JobVacancies!.Include(v => v.Settlement).Where(v => v.Settlement!.Id.Equals(settlementId) && (v.TitleLowerCase!.Contains(searchInput) || v.DescriptionLowerCase!.Contains(searchInput))).ToList();
-                }
+                result = result = result.Where(v => v.TitleLowerCase!.Contains(searchInput.ToLower()) || v.DescriptionLowerCase!.Contains(searchInput.ToLower()));
             }
-            else
+            if(settlementId != null)
             {
-                if (settlementId == null)
-                {
-                    throw new InvalidOperationException("No search params!");
-                }
-                else
-                {
-                    return _dbContext.JobVacancies!.Include(v => v.Settlement).Where(v => v.Settlement!.Id.Equals(settlementId)).ToList();
-                }
+                result = result.Where(v => v.Settlement!.Id.Equals(settlementId));
             }
-
+            return result.OrderBy(v => v.CreationTime).ToList();
         }
 
         public List<JobVacancy> UserJobVacancies(string username)

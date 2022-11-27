@@ -1,8 +1,12 @@
-﻿<div class="container">
+﻿@{
+    List<JobVacancy> jobVacancies = Model;
+}
+
+<div class="container">
     <form method="post">
-        @if (Model != null)
+        @if (jobVacancies != null)
         {
-            @if (Model.Count > 0)
+            @if (jobVacancies.Count > 0)
             {
                 <div class="row">
                     <div class="col-sm-12">
@@ -18,7 +22,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var vacancy in Model)
+                        @foreach (var vacancy in jobVacancies)
                         {
                             <tr>
                                 <td class="col-1">
@@ -26,7 +30,15 @@
                                 </td>
                                 <td class="col-10"><a href="@Url.Action("index", "JobVacancy")?jobVacancyId=@vacancy.Id">@vacancy.Title</a></td>
 
-                                <td class="col-1"><a href="@Url.Action("EditVacancy", "Employer")?jobVacancyId=@vacancy.Id" class="btn btn-warning" id="vacancyEdit + @vacancy.Id">Edit</a></td>
+                                @if (vacancy.Opened)
+                                {
+                                    <td class="col-1"><a href="@Url.Action("EditVacancy", "Employer")?jobVacancyId=@vacancy.Id" class="btn btn-warning" id="vacancyEdit + @vacancy.Id">Edit</a></td>
+                                }
+                                else
+                                {
+                                    <td class="col-1"><button class="btn btn-danger" id="vacancyEdit + @vacancy.Id" disabled>Closed</button></td>
+                                }
+
                             </tr>
                         }
                     </tbody>

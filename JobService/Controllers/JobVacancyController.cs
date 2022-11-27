@@ -1,7 +1,5 @@
-﻿using JobService.Models;
-using JobService.Services.VacancyService;
+﻿using JobService.Services.VacancyService;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace JobService.Controllers
 {

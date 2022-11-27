@@ -1,9 +1,6 @@
-﻿using JobService.Models;
-using JobService.Services.SettlementService;
+﻿using JobService.Services.SettlementService;
 using JobService.Services.VacancyService;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System.Globalization;
 
 namespace JobService.Controllers
 {
