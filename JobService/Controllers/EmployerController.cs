@@ -41,7 +41,7 @@ namespace JobService.Controllers
 
             if (!HttpContext.User!.Identity!.IsAuthenticated)
             {
-                return LocalRedirect(Url.Action("Login", "Authorization")!);
+                return Redirect(Url.Action("Login", "Authorization")!);
             }
 
             var jobVacations = _vacancyService.UserJobVacancies(User.Identity!.Name!);
@@ -76,7 +76,7 @@ namespace JobService.Controllers
             if (salary == null)
                 salary = "0";
             _vacancyService.AddVacancy(user!.Name!, title, settlementId, int.Parse(salary), description, hardSkills);
-            return LocalRedirect("~/employer");
+            return Redirect("~/employer");
         }
 
         [Authorize]
@@ -94,13 +94,13 @@ namespace JobService.Controllers
             if (salary == null)
                 salary = "0";
             _vacancyService.EditVacancy(vacancyId, user!.Name!, title, settlementId, int.Parse(salary), description, hardSkills);
-            return LocalRedirect("~/employer");
-        }
+            return Redirect("~/employer");
+        }   
 
         public IActionResult ToJobseekerMode()
         {
             HttpContext.Response.Cookies.Append("mode", "jobseeker");
-            return LocalRedirect("~/");
+            return Redirect("~/");
         }
 
     }

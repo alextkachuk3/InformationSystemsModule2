@@ -39,7 +39,7 @@ namespace JobService.Controllers
 
             if (jobVacancyId == null)
             {
-                return LocalRedirect("~/");
+                return Redirect("~/");
             }
             else
             {

@@ -63,7 +63,7 @@ namespace JobService.Controllers
 
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                return LocalRedirect("~/");
+                return Redirect("~/");
             }
             else
             {
@@ -94,7 +94,7 @@ namespace JobService.Controllers
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync();
-            return LocalRedirect("~/");
+            return Redirect("~/");
         }
     }
 }

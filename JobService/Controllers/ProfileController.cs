@@ -20,7 +20,7 @@ namespace JobService.Controllers
         {
             if (username == null)
             {
-                return LocalRedirect("~/");
+                return Redirect("~/");
             }
             else
             {
@@ -33,7 +33,7 @@ namespace JobService.Controllers
         {
             if (username == null)
             {
-                return LocalRedirect("~/");
+                return Redirect("~/");
             }
             else
             {
@@ -56,7 +56,7 @@ namespace JobService.Controllers
 
             _userService.UpdateProfile(username, firstName, lastName, phoneNumber, email, settlementId, inSearch, hardSkills);
             
-            return LocalRedirect("~/profile/?username=" + username);
+            return Redirect("~/profile/?username=" + username);
         }
     }
 }

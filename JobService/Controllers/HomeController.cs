@@ -32,7 +32,7 @@ namespace JobService.Controllers
                 }
                 else if (mode.Equals("employer"))
                 {
-                    return LocalRedirect("~/employer");
+                    return Redirect("~/employer");
                 }
             }
             else
@@ -50,7 +50,7 @@ namespace JobService.Controllers
         public IActionResult ToEmployerMode()
         {
             HttpContext.Response.Cookies.Append("mode", "employer");
-            return LocalRedirect("~/employer");
+            return Redirect("~/employer");
         }
 
         [HttpPost]
