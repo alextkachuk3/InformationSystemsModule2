@@ -3,6 +3,7 @@
 namespace JobService.Models
 {
     [Keyless]
+    [Index(nameof(Year), nameof(Month), "HardSkillId", IsUnique = true)]
     public class HardSkillSalaryIndicator
     {
         public int Year { get; set; }

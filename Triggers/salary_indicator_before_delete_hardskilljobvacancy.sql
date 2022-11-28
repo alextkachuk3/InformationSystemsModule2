@@ -15,7 +15,7 @@ BEGIN
 		UPDATE jobservice.hardskillsalaryindicators
 			SET hardskillsalaryindicators.VacationsCount = hardskillsalaryindicators.VacationsCount - 1,
 				hardskillsalaryindicators.SalarySum = hardskillsalaryindicators.SalarySum - @vacancy_salary,
-				hardskillsalaryindicators.SalaryAvg = (hardskillsalaryindicators.SalarySum - @vacancy_salary) / GREATEST(hardskillsalaryindicators.VacationsCount, 1)
+				hardskillsalaryindicators.SalaryAvg = (hardskillsalaryindicators.SalarySum) / GREATEST(hardskillsalaryindicators.VacationsCount, 1)
 			WHERE
 				hardskillsalaryindicators.HardSkillId = OLD.HardSkillsId AND
 				hardskillsalaryindicators.Year = YEAR(@vacancy_datetime) AND
