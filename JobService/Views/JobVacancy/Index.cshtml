@@ -6,39 +6,57 @@
     <div class="mb-3">
         <h3>@vacancy.Title</h3>
     </div>
-    @if (vacancy.Salary > 0)
-    {
-        <div>
-            <p>Salary @vacancy.Salary$</p>
-        </div>
-    }
-    @if (vacancy.Settlement is not null)
-    {
-        <div>
-            <p>@vacancy.Settlement.Region!.Name region, @vacancy.Settlement.Name</p>
-        </div>
-    }
-    @if (vacancy.HardSkills is not null)
-    {
-        @if (vacancy.HardSkills.Count > 0)
-        {
-            <hr class="hr my-3" />
-            <p>Requirements:</p>
+    <div class="row">
+        <div class="col-8">
+            @if (vacancy.Salary > 0)
+            {
+                <div>
+                    <p>Salary @vacancy.Salary$</p>
+                </div>
+            }
+            @if (vacancy.Settlement is not null)
+            {
+                <div>
+                    <p>@vacancy.Settlement.Region!.Name region, @vacancy.Settlement.Name</p>
+                </div>
+            }
+            @if (vacancy.HardSkills is not null)
+            {
+                @if (vacancy.HardSkills.Count > 0)
+                {
+                    <hr class="hr my-3" />
+                    <p>Requirements:</p>
+                    <div class="mb-3">
+                        <ul>
+                            @foreach (var hardSkill in vacancy.HardSkills)
+                            {
+                                <li>@hardSkill.Name</li>
+                            }
+                        </ul>
+                    </div>
+                }
+            }
             <div class="mb-3">
-                <ul>
-                    @foreach (var hardSkill in vacancy.HardSkills)
-                    {
-                        <li>@hardSkill.Name</li>
-                    }
-                </ul>
+                <hr class="hr my-3" />
+                <p>Description:</p>
+                <textarea readonly rows="20" class="form-control">@vacancy.Description</textarea>
             </div>
-        }
-    }
-    <div class="mb-3">
-        <hr class="hr my-3" />
-        <p>Description:</p>
-        <textarea readonly rows="20" class="form-control">@vacancy.Description</textarea>
+        </div>
+        <div class="col-4">
+            @if (ViewBag.Own)
+            {
+                <div class="mb-3">
+                    <h3>Suggested workers</h3>
+                </div>
+                @foreach (SuitableJobSeeker suitableJobSeeker in ViewBag.SuitableJobSeekers)
+                {
+                    <a href="@Url.Action("index", "profile")?username=@suitableJobSeeker.User!.Username">@suitableJobSeeker.User!.FirstName @suitableJobSeeker.User!.LastName</a>
+                    <hr>
+                }
+            }
+        </div>
     </div>
+
 
 
 </div>

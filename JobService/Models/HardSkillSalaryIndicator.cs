@@ -11,7 +11,7 @@ namespace JobService.Models
         public int Month { get; set; }
 
         public HardSkill? HardSkill { get; set; }
-        
+
         public int VacationsCount { get; set; }
 
         public int SalarySum { get; set; }

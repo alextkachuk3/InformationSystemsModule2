@@ -1,4 +1,5 @@
-﻿using JobService.Services.VacancyService;
+﻿using JobService.Services.UserService;
+using JobService.Services.VacancyService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobService.Controllers
@@ -7,11 +8,13 @@ namespace JobService.Controllers
     {
         private readonly ILogger<JobVacancyController> _logger;
         private readonly IVacancyService _vacancyService;
+        private readonly IUserService _userService;
 
-        public JobVacancyController(ILogger<JobVacancyController> logger, IVacancyService vacancyService)
+        public JobVacancyController(ILogger<JobVacancyController> logger, IVacancyService vacancyService, IUserService userService)
         {
             _logger = logger;
             _vacancyService = vacancyService;
+            _userService = userService;
         }
 
         public IActionResult Index(int? jobVacancyId)
@@ -41,9 +44,19 @@ namespace JobService.Controllers
             }
             else
             {
+                ViewBag.Own = false;
                 var vacancy = _vacancyService.GetVacancy((int)jobVacancyId);
+                if (vacancy != null && HttpContext.User.Identity != null)
+                {
+                    if (vacancy.User!.Username == HttpContext.User.Identity.Name)
+                    {
+                        ViewBag.Own = true;
+                        ViewBag.SuitableJobSeekers = _vacancyService.vacancySuitableJobSeekers(jobVacancyId);
+                    }
+                }
+
                 return View(vacancy);
-            }            
+            }
         }
 
         public IActionResult Search(string? searchWord, int? settlementId)

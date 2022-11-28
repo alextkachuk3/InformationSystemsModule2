@@ -70,11 +70,11 @@ namespace JobService.Services.UserService
                 {
                     user.HardSkills = new List<HardSkill>(_dbContext.HardSkills!.Where(s => hardSkills.Contains(s.Id)));
 
-                    List<JobVacancy>? suitableJobs = _dbContext.JobVacancies!.Where(v => v.HardSkills!.Any(l => hardSkills.Contains(l.Id))).ToList();
+                    List<JobVacancy>? suitableJobs = _dbContext.JobVacancies!.Where(v => v.User!.InSearch.Equals(true) && v.HardSkills!.Any(l => hardSkills.Contains(l.Id))).ToList();
 
-                    if(suitableJobs != null)
+                    if (suitableJobs != null)
                     {
-                        foreach(JobVacancy suitableJob in suitableJobs)
+                        foreach (JobVacancy suitableJob in suitableJobs)
                         {
                             SuitableJobSeeker suitableJobSeeker = new SuitableJobSeeker();
                             suitableJobSeeker.User = user;

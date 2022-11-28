@@ -17,5 +17,7 @@ namespace JobService.Services.VacancyService
         List<JobVacancy> UserJobVacancies(string username);
 
         List<JobVacancy> SearchJobVacancies(string? searchInput, int? settlementId);
+
+        List<SuitableJobSeeker> vacancySuitableJobSeekers(int? vacancyId);
     }
 }

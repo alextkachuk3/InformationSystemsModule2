@@ -43,19 +43,19 @@ namespace JobService.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(string username, string firstName, string lastName, string? phoneNumber, string? email, int? settlementId, bool inSearch, List<int>? hardSkills) 
+        public IActionResult Edit(string username, string firstName, string lastName, string? phoneNumber, string? email, int? settlementId, bool inSearch, List<int>? hardSkills)
         {
-            if(username == null)
+            if (username == null)
             {
                 throw new Exception("Not authorized user!");
             }
-            if(username != User.Identity!.Name)
+            if (username != User.Identity!.Name)
             {
                 throw new Exception("User tried to edit not own profile!");
             }
 
             _userService.UpdateProfile(username, firstName, lastName, phoneNumber, email, settlementId, inSearch, hardSkills);
-            
+
             return Redirect("~/profile/?username=" + username);
         }
     }
