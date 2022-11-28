@@ -21,15 +21,28 @@ namespace JobService.Services.VacancyService
             try
             {
                 var jobVacancy = new JobVacancy(user, title, salary, description);
+                List<User>? suitableJobSeekers = null;
                 if (settlementId is not null)
                 {
                     jobVacancy.Settlement = _dbContext.Settlements!.Where(s => s.Id.Equals(settlementId)).FirstOrDefault();
                 }
                 if (hardSkills is not null)
                 {
+                    suitableJobSeekers = _dbContext.Users!.Where(u => u.HardSkills!.Any(l => hardSkills.Contains(l.Id))).ToList();
                     jobVacancy.HardSkills = new List<HardSkill>(_dbContext.HardSkills!.Where(v => hardSkills.Contains(v.Id)));
                 }
                 _dbContext.JobVacancies!.Add(jobVacancy);
+                if(suitableJobSeekers != null)
+                {
+                    foreach (User suitableJobSeekerU in suitableJobSeekers)
+                    {
+                        SuitableJobSeeker suitableJobSeeker = new SuitableJobSeeker();
+                        suitableJobSeeker.User = suitableJobSeekerU;
+                        suitableJobSeeker.JobVacancy = jobVacancy;
+                        _dbContext.SuitableJobSeekers!.Add(suitableJobSeeker);
+                    }
+                }               
+                
             }
             catch
             {

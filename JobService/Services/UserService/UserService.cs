@@ -69,6 +69,19 @@ namespace JobService.Services.UserService
                 if (hardSkills is not null)
                 {
                     user.HardSkills = new List<HardSkill>(_dbContext.HardSkills!.Where(s => hardSkills.Contains(s.Id)));
+
+                    List<JobVacancy>? suitableJobs = _dbContext.JobVacancies!.Where(v => v.HardSkills!.Any(l => hardSkills.Contains(l.Id))).ToList();
+
+                    if(suitableJobs != null)
+                    {
+                        foreach(JobVacancy suitableJob in suitableJobs)
+                        {
+                            SuitableJobSeeker suitableJobSeeker = new SuitableJobSeeker();
+                            suitableJobSeeker.User = user;
+                            suitableJobSeeker.JobVacancy = suitableJob;
+                            _dbContext.SuitableJobSeekers!.Add(suitableJobSeeker);
+                        }
+                    }
                 }
             }
             catch

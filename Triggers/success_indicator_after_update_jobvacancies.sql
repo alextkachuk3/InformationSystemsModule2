@@ -1,46 +1,42 @@
 DELIMITER $$
 
-CREATE TRIGGER jobservice.success_indicator_after_update_jobvacancies AFTER UPDATE ON jobvacancies
+CREATE TRIGGER jobservice.suitablejobseeker_on_jobvacancy_insert AFTER INSERT ON jobvacancies
 FOR EACH ROW
 BEGIN
+
 	DECLARE done INT DEFAULT FALSE;
-	DECLARE current_hardskillid INTEGER;   
-    
-	DECLARE hardskillsids_cursor CURSOR FOR 
-		SELECT HardSkillsId
-		FROM hardskilljobvacancy
-		INNER JOIN jobvacancies
-		ON hardskilljobvacancy.jobVacanciesid = jobvacancies.id
-		WHERE jobVacancies.id = NEW.id;
-        
+	DECLARE current_userid INTEGER;
+
+	DECLARE usersids_cursor CURSOR FOR
+		SELECT DISTINCT UsersId
+		FROM hardskilluser
+		INNER JOIN users
+		ON hardskilluser.usersid = users.Id
+		WHERE hardskilluser.HardSkillsId IN (
+			SELECT hardskilljobvacancy.hardskillsid
+			FROM hardskilljobvacancy
+			WHERE hardskilljobvacancy.JobVacanciesId = NEW.Id
+			);	
+
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-            
-	IF NEW.opened = 0 THEN
-		OPEN hardskillsids_cursor;
     
-		read_loop: LOOP
-			FETCH hardskillsids_cursor INTO current_hardskillid;
-			IF done THEN
-				LEAVE read_loop;
-			END IF;
+    OPEN usersids_cursor;
+    
+    read_loop: LOOP
+		FETCH usersids_cursor INTO current_userid;
         
-			INSERT IGNORE INTO hardskillsuccessvacationsindicators
-			(hardskillsuccessvacationsindicators.HardSkillId)
-			VALUES
-			(current_hardskillid);
-            
-            UPDATE hardskillsuccessvacationsindicators
-				SET 
-					hardskillsuccessvacationsindicators.ClosedVacationsCount = hardskillsuccessvacationsindicators.ClosedVacationsCount + 1,
-					hardskillsuccessvacationsindicators.SuccessVacationsCount = hardskillsuccessvacationsindicators.SuccessVacationsCount + NEW.Success,
-                    hardskillsuccessvacationsindicators.SuccessPercent = (hardskillsuccessvacationsindicators.SuccessVacationsCount / hardskillsuccessvacationsindicators.ClosedVacationsCount) * 100
-				WHERE hardskillsuccessvacationsindicators.HardSkillId = current_hardskillid;
-        
-		END LOOP;
+        IF done THEN
+			LEAVE read_loop;
+		END IF;
     
-		CLOSE hardskillsids_cursor;
+		INSERT IGNORE INTO suitablejobseekers
+        (JobVacancyId, UserId)
+        VALUES
+        (NEW.Id, current_userid);		
+		
+    END LOOP;
     
-    END IF;
+    CLOSE usersids_cursor;
 
 END$$
 

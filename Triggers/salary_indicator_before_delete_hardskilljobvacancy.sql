@@ -13,13 +13,13 @@ BEGIN
 		VALUES
 		(OLD.HardSkillsId, YEAR(@vacancy_datetime), MONTH(@vacancy_datetime), 0, 0, 0);
 		UPDATE jobservice.hardskillsalaryindicators
-			SET hardskillsalaryindicators.VacationsCount = hardskillsalaryindicators.VacationsCount - 1,
-				hardskillsalaryindicators.SalarySum = hardskillsalaryindicators.SalarySum - @vacancy_salary,
-				hardskillsalaryindicators.SalaryAvg = (hardskillsalaryindicators.SalarySum) / GREATEST(hardskillsalaryindicators.VacationsCount, 1)
-			WHERE
-				hardskillsalaryindicators.HardSkillId = OLD.HardSkillsId AND
-				hardskillsalaryindicators.Year = YEAR(@vacancy_datetime) AND
-				hardskillsalaryindicators.Month = MONTH(@vacancy_datetime);
+		SET hardskillsalaryindicators.VacationsCount = hardskillsalaryindicators.VacationsCount - 1,
+			hardskillsalaryindicators.SalarySum = hardskillsalaryindicators.SalarySum - @vacancy_salary,
+			hardskillsalaryindicators.SalaryAvg = (hardskillsalaryindicators.SalarySum) / GREATEST(hardskillsalaryindicators.VacationsCount, 1)
+		WHERE
+			hardskillsalaryindicators.HardSkillId = OLD.HardSkillsId AND
+			hardskillsalaryindicators.Year = YEAR(@vacancy_datetime) AND
+			hardskillsalaryindicators.Month = MONTH(@vacancy_datetime);
 	END IF;
 END$$
 
