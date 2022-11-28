@@ -3,11 +3,44 @@
 <div class="container">
     Charts
     <div class="row">
-        <div id="chartContainer" style="height: 500px;" />
+        <div id="chartContainer" style="height: 450px;" />
     </div>
     <hr>
     <div class="row">
-        <div class="mb-3">
+        <div class="col-4 border">
+            <div class="row">
+                <div class="col-6">
+                    Total vacations
+                </div>
+                <div class="col-6">
+                    <p id="totalVacations"></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 border">
+            <div class="row">
+                <div class="col-6">
+                    Closed vacations
+                </div>
+                <div class="col-6">
+                    <p id="closedVacations"></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 border">
+            <div class="row">
+                <div class="col-6">
+                    Success vacations
+                </div>
+                <div class="col-6">
+                    <p id="successVacations"></p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="row p-3">
+        <div class="col-lg-3">
             <select name="hardSkills" id="HardSkillsInput" class="form-select form-select-sm" aria-label=".form-select-sm example">
             </select>
         </div>
@@ -47,7 +80,7 @@
                 }
                 $.ajax({
                     type: "POST",
-                    url: "@Url.Action("hardSkillYearSallaryIndicators", "Indicators")",
+                    url: "@Url.Action("HardSkillYearSallaryIndicators", "Indicators")",
                     dataType: "json",
                     data: { hardSkillId: $(this).val() },
                     success: function (data) {
@@ -63,6 +96,29 @@
                         });
 
                         chart.render();
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("HardSkillVacationsCount", "Indicators")",
+                    dataType: "json",
+                    data: { hardSkillId: $(this).val() },
+                    success: function (data) {
+                        console.log(data);
+                        $("#totalVacations").text(data.value);
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("HardSkillVacationsSuccessIndicator", "Indicators")",
+                    dataType: "json",
+                    data: { hardSkillId: $(this).val() },
+                    success: function (data) {
+                        console.log(data);
+                        $("#closedVacations").text(data.value.closedVacationsCount);
+                        $("#successVacations").text(data.value.successVacationsCount + ' - ' + data.value.successPercent + '%');
                     }
                 });
             });

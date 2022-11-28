@@ -15,9 +15,21 @@ namespace JobService.Controllers
         }
 
         [HttpPost]
-        public JsonResult hardSkillYearSallaryIndicators(int hardSkillId)
+        public JsonResult HardSkillYearSallaryIndicators(int hardSkillId)
         {
             return new JsonResult(Ok(_indicatorsService.GetHardSkillSalaryIndicators(hardSkillId, 12)));
+        }
+
+        [HttpPost]
+        public JsonResult HardSkillVacationsSuccessIndicator(int hardSkillId)
+        {
+            return new JsonResult(Ok(_indicatorsService.GetHardSkillVacationsSuccessIndicators(hardSkillId)));
+        }
+
+        [HttpPost]
+        public JsonResult HardSkillVacationsCount(int hardSkillId)
+        {
+            return new JsonResult(Ok(_indicatorsService.GetHardSkillVacationsCount(hardSkillId)));
         }
     }
 }
