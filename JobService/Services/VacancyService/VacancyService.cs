@@ -28,7 +28,12 @@ namespace JobService.Services.VacancyService
                 }
                 if (hardSkills is not null)
                 {
-                    suitableJobSeekers = _dbContext.Users!.Where(u => u.InSearch.Equals(true) && u.HardSkills!.Any(l => hardSkills.Contains(l.Id))).ToList();
+                    var req = _dbContext.Users!.Where(u => u.InSearch.Equals(true) && u.HardSkills!.Any(l => hardSkills.Contains(l.Id)));
+                    if (settlementId != null)
+                    {
+                        req = req.Where(u => u.Settlement!.Id.Equals(settlementId));
+                    }
+                    suitableJobSeekers = req.ToList();
                     jobVacancy.HardSkills = new List<HardSkill>(_dbContext.HardSkills!.Where(v => hardSkills.Contains(v.Id)));
                 }
                 _dbContext.JobVacancies!.Add(jobVacancy);
@@ -39,7 +44,10 @@ namespace JobService.Services.VacancyService
                         SuitableJobSeeker suitableJobSeeker = new SuitableJobSeeker();
                         suitableJobSeeker.User = suitableJobSeekerU;
                         suitableJobSeeker.JobVacancy = jobVacancy;
-                        _dbContext.SuitableJobSeekers!.Add(suitableJobSeeker);
+                        if (_dbContext.SuitableJobSeekers!.FirstOrDefault(s => s.User!.Id.Equals(suitableJobSeekerU.Id) && s.JobVacancy!.Id.Equals(jobVacancy.Id)) == null)
+                        {
+                            _dbContext.SuitableJobSeekers!.Add(suitableJobSeeker);
+                        }
                     }
                 }
 

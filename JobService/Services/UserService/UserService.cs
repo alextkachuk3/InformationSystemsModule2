@@ -70,7 +70,12 @@ namespace JobService.Services.UserService
                 {
                     user.HardSkills = new List<HardSkill>(_dbContext.HardSkills!.Where(s => hardSkills.Contains(s.Id)));
 
-                    List<JobVacancy>? suitableJobs = _dbContext.JobVacancies!.Where(v => v.User!.InSearch.Equals(true) && v.HardSkills!.Any(l => hardSkills.Contains(l.Id))).ToList();
+                    var req = _dbContext.JobVacancies!.Where(v => v.User!.InSearch.Equals(true) && v.HardSkills!.Any(l => hardSkills.Contains(l.Id)));
+                    if (settlementId != null)
+                    {
+                        req.Where(v => v.Settlement!.Id.Equals(settlementId));
+                    }
+                    List<JobVacancy>? suitableJobs = req.ToList();
 
                     if (suitableJobs != null)
                     {
@@ -79,7 +84,10 @@ namespace JobService.Services.UserService
                             SuitableJobSeeker suitableJobSeeker = new SuitableJobSeeker();
                             suitableJobSeeker.User = user;
                             suitableJobSeeker.JobVacancy = suitableJob;
-                            _dbContext.SuitableJobSeekers!.Add(suitableJobSeeker);
+                            if (_dbContext.SuitableJobSeekers!.FirstOrDefault(s => s.User!.Id.Equals(user.Id) && s.JobVacancy!.Id.Equals(suitableJob.Id)) == null)
+                            {
+                                _dbContext.SuitableJobSeekers!.Add(suitableJobSeeker);
+                            }
                         }
                     }
                 }
